@@ -1,21 +1,20 @@
 ﻿using Microsoft.Extensions.Options;
-using System.Threading;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.ReplyMarkups;
 using TelegramBot.Options;
 
 namespace TelegramBot.Service
 {
-    public class TelegramBotService : BackgroundService
+    public class TelegramBotServiceMain : BackgroundService
     {
-        private readonly ILogger<TelegramBotService> _logger;
+        private readonly ILogger<TelegramBotServiceMain> _logger;
         private readonly ITelegramBotClient _client;
         private readonly TelegramOptions _options;
+        private readonly TelegramBotServiceOptions _telegramBotServiceOptions = new TelegramBotServiceOptions();
 
-        public TelegramBotService(ILogger<TelegramBotService> logger,
+        public TelegramBotServiceMain(ILogger<TelegramBotServiceMain> logger,
             ITelegramBotClient client,
             IOptions<TelegramOptions> options)
         {
@@ -57,10 +56,16 @@ namespace TelegramBot.Service
             switch (message.Text)
             {
                 case "/start":
-                    await botClient.SendTextMessageAsync(chatId, "Hello I'm test bot!");
+                    await _telegramBotServiceOptions
+                        .HandleStart(botClient, cancellationToken, message);
                     break;
                 case "/help":
-                    await botClient.SendTextMessageAsync(chatId, "Help");
+                    await _telegramBotServiceOptions
+                        .HandleHelp(botClient, cancellationToken, message);
+                    break;
+                case "/buy":
+                    await _telegramBotServiceOptions
+                        .HandleBrend(botClient, cancellationToken, message);
                     break;
                 case "/info":
                     await botClient.SendTextMessageAsync(chatId, "Info: ");
@@ -84,19 +89,8 @@ namespace TelegramBot.Service
             return Task.CompletedTask;
         }
 
-        private async Task MessageTestHandler(Message message, CancellationToken cancellationToken)
-        {
-            /*InlineKeyboardMarkup inlineKeyboard = new(
-            [
-                [InlineKeyboardButton.WithCallbackData("Yes", "lessons-info")],
-                [InlineKeyboardButton.WithCallbackData("No", "lessons-application")],
-            ]);*/
-        }
+        
 
-        private async Task SendMessage()
-        {
-
-        }
     }
 }
 

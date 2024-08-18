@@ -4,7 +4,7 @@ using TelegramBot.Options;
 using TelegramBot.Service;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddHostedService<TelegramBotService>();
+builder.Services.AddHostedService<TelegramBotServiceMain>();
 
 builder.Services.AddTransient<ITelegramBotClient, TelegramBotClient>(serviceProvider =>
 {
