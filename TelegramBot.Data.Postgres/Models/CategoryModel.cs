@@ -1,13 +1,14 @@
-﻿namespace TelegramBot.Data.Postgres.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace TelegramBot.Data.Postgres.Models;
 
 public class CategoryModel
 {
-    public int Id { get; set; }
-
+    [Key]
+    [Required]
+    public Guid Id { get; set; }
+    [Required]
     public string Name { get; set; }
-
-    public decimal Price { get; set; }
-
-
+    [Required]
+    public IEnumerable<ProductModel> Products { get; set; } = [];
 }
-
